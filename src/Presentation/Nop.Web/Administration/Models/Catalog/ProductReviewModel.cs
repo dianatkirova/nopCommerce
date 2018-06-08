@@ -4,12 +4,19 @@ using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Localization;
+using System.Collections.Generic;
 
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(ProductReviewValidator))]
-    public partial class ProductReviewModel : BaseNopEntityModel
+    public partial class ProductReviewModel : BaseNopEntityModel, ILocalizedModel<ProductReviewLocalizedModel>
     {
+        public ProductReviewModel()
+        {
+            Locales = new List<ProductReviewLocalizedModel>();
+        }
+
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Store")]
         public string StoreName { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
@@ -45,5 +52,24 @@ namespace Nop.Admin.Models.Catalog
 
         //vendor
         public bool IsLoggedInAsVendor { get; set; }
+
+        public IList<ProductReviewLocalizedModel> Locales { get; set; }
+    }
+
+    public partial class ProductReviewLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Title")]
+        [AllowHtml]
+        public string Title { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.ReviewText")]
+        [AllowHtml]
+        public string ReviewText { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.ReplyText")]
+        [AllowHtml]
+        public string ReplyText { get; set; }
     }
 }

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product review
     /// </summary>
-    public partial class ProductReview : BaseEntity
+    public partial class ProductReview : BaseEntity, ILocalizedEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
 

@@ -32,47 +32,96 @@
                             @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Title)
-                        </div>
-                        <div class="col-md-9">
-                            @if (Model.IsLoggedInAsVendor)
-                            {
-                                @Html.NopDisplayFor(model => model.Title)
-                            }
-                            else
-                            {
-                                @Html.NopEditorFor(model => model.Title, required: true)
-                                @Html.ValidationMessageFor(model => model.Title)
-                            }
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReviewText)
-                        </div>
-                        <div class="col-md-9">
-                            @if (Model.IsLoggedInAsVendor)
-                            {
-                                @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(Model.ReviewText, false, true, false, false, false, false))
-                            }
-                            else
-                            {
-                                @Html.NopTextAreaFor(model => model.ReviewText, required: true)
-                                @Html.ValidationMessageFor(model => model.ReviewText)
-                            }
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReplyText)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.ReplyText)
-                            @Html.ValidationMessageFor(model => model.ReplyText)
-                        </div>
-                    </div>
+                    @(Html.LocalizedEditor<ProductReviewModel, ProductReviewLocalizedModel>("productreview-localized",
+                                    @<div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                @Html.NopLabelFor(model => model.Locales[item].Title)
+                                            </div>
+                                            <div class="col-md-9">
+                                                @if (Model.IsLoggedInAsVendor)
+                                                {
+                                                    @Html.NopDisplayFor(model => model.Locales[item].Title)
+                                                }
+                                                else
+                                                {
+                                                    @Html.NopEditorFor(model => model.Locales[item].Title, required: true)
+                                                    @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                @Html.NopLabelFor(model => model.Locales[item].ReviewText)
+                                            </div>
+                                            <div class="col-md-9">
+                                                @if (Model.IsLoggedInAsVendor)
+                                                {
+                                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(Model.Locales[item].ReviewText, false, true, false, false, false, false))
+                                                }
+                                                else
+                                                {
+                                                    @Html.NopTextAreaFor(model => model.Locales[item].ReviewText, required: true)
+                                                    @Html.ValidationMessageFor(model => model.Locales[item].ReviewText)
+                                                }
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                             <div class="col-md-3">
+                                                 @Html.NopLabelFor(model => model.Locales[item].ReplyText)
+                                             </div>
+                                             <div class="col-md-9">
+                                                 @Html.NopTextAreaFor(model => model.Locales[item].ReplyText)
+                                                 @Html.ValidationMessageFor(model => model.Locales[item].ReplyText)
+                                             </div>
+                                         </div>
+                                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                                    </div>
+                                    ,
+                                    @<div>
+                                             <div class="form-group">
+                                                 <div class="col-md-3">
+                                                     @Html.NopLabelFor(model => model.Title)
+                                                 </div>
+                                                 <div class="col-md-9">
+                                                     @if (Model.IsLoggedInAsVendor)
+                                                     {
+                                                         @Html.NopDisplayFor(model => model.Title)
+                                                     }
+                                                     else
+                                                     {
+                                                         @Html.NopEditorFor(model => model.Title, required: true)
+                                                         @Html.ValidationMessageFor(model => model.Title)
+                                                     }
+                                                 </div>
+                                             </div>
+                                             <div class="form-group">
+                                                 <div class="col-md-3">
+                                                     @Html.NopLabelFor(model => model.ReviewText)
+                                                 </div>
+                                                 <div class="col-md-9">
+                                                     @if (Model.IsLoggedInAsVendor)
+                                                     {
+                                                         @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(Model.ReviewText, false, true, false, false, false, false))
+                                                     }
+                                                     else
+                                                     {
+                                                         @Html.NopTextAreaFor(model => model.ReviewText, required: true)
+                                                         @Html.ValidationMessageFor(model => model.ReviewText)
+                                                     }
+                                                 </div>
+                                             </div>
+                                             <div class="form-group">
+                                                 <div class="col-md-3">
+                                                     @Html.NopLabelFor(model => model.ReplyText)
+                                                 </div>
+                                                 <div class="col-md-9">
+                                                     @Html.NopTextAreaFor(model => model.ReplyText)
+                                                     @Html.ValidationMessageFor(model => model.ReplyText)
+                                                 </div>
+                                             </div>
+                                        </div>
+                    ))
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Rating)

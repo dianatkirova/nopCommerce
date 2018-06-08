@@ -25,6 +25,8 @@ namespace Nop.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILanguageService _languageService;
         private readonly IPermissionService _permissionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IStoreService _storeService;
@@ -37,7 +39,9 @@ namespace Nop.Admin.Controllers
 
         public ProductReviewController(IProductService productService, 
             IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
+            ILanguageService languageService,
             IPermissionService permissionService,
             IEventPublisher eventPublisher,
             IStoreService storeService,
@@ -47,6 +51,8 @@ namespace Nop.Admin.Controllers
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
+            this._languageService = languageService;
             this._permissionService = permissionService;
             this._eventPublisher = eventPublisher;
             this._storeService = storeService;
@@ -96,6 +102,29 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
+        }
+
+        [NonAction]
+        protected virtual void UpdateLocales(ProductReview productReview, ProductReviewModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(productReview,
+                                                               x => x.Title,
+                                                               localized.Title,
+                                                               localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(productReview,
+                                                           x => x.ReviewText,
+                                                           localized.ReviewText,
+                                                           localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(productReview,
+                                                           x => x.ReplyText,
+                                                           localized.ReplyText,
+                                                           localized.LanguageId);
+
+            }
         }
 
         #endregion
@@ -192,6 +221,15 @@ namespace Nop.Admin.Controllers
 
             var model = new ProductReviewModel();
             PrepareProductReviewModel(model, productReview, false, false);
+
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Title = productReview.GetLocalized(x => x.Title, languageId, false, false);
+                locale.ReviewText = productReview.GetLocalized(x => x.ReviewText, languageId, false, false);
+                locale.ReplyText = productReview.GetLocalized(x => x.ReplyText, languageId, false, false);
+            });
+
             return View(model);
         }
 
@@ -240,6 +278,9 @@ namespace Nop.Admin.Controllers
                         _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
 
                 }
+
+                //locales
+                UpdateLocales(productReview, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
 
